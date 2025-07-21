@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.magazineluiza.favoritos.services.ProductService;
 
 @RestController
-@RequestMapping("/api/products") // Endpoint base para seus produtos
+@RequestMapping("/api/v1/products") // Endpoint base para seus produtos
 public class ProductController {
 
 	@Autowired

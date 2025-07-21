@@ -21,7 +21,7 @@ import com.magazineluiza.favoritos.exception.ResourceNotFoundException;
 import com.magazineluiza.favoritos.services.ClientService;
 
 @RestController // Indica que esta classe é um controlador REST
-@RequestMapping("/api/clients") // Define o caminho base para todos os endpoints neste controller
+@RequestMapping("/api/v1/clients") // Define o caminho base para todos os endpoints neste controller
 public class ClientController {
 
 	@Autowired

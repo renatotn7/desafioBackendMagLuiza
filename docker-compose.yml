@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/favoritos_aiqfome_db
+      SPRING_DATASOURCE_USERNAME: favoritos_aiqfome_user
+      SPRING_DATASOURCE_PASSWORD: 1234567890
+    depends_on:
+      - db
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: favoritos_aiqfome_db
+      POSTGRES_USER: favoritos_aiqfome_user
+      POSTGRES_PASSWORD: 1234567890
+    ports: # Mapeamento de portas: HOST_PORT:CONTAINER_PORT
+      - "5433:5432" # Expõe a porta 5432 do contêiner para a porta 5432 do seu host
+ 

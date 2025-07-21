@@ -14,15 +14,25 @@ import com.magazineluiza.favoritos.domain.user.RegisterDTO;
 import com.magazineluiza.favoritos.exception.DuplicateLoginException; // Importe a nova exceção
 import com.magazineluiza.favoritos.services.AuthenticationService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("auth/v1")
 public class AuthenticationController {
 
 	@Autowired
 	private AuthenticationService authenticationService;
 
+	@Operation(summary = "Autentica um usuário e retorna um token JWT", description = "Permite que um usuário existente faça login fornecendo suas credenciais (username/email e senha). Em caso de sucesso, um token de acesso JWT é retornado para uso em requisições protegidas.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Autenticação bem-sucedida", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseDTO.class))),
+			@ApiResponse(responseCode = "403", description = "Requisicao não permitida, usuario ou senha estao incorretos") })
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
 		LoginResponseDTO response = authenticationService.authenticate(data);

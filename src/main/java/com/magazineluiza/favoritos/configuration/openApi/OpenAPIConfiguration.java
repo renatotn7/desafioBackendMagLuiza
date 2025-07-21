@@ -15,7 +15,7 @@ public class OpenAPIConfiguration {
 
 	@Bean
 	public OpenAPI customOpenAPI() {
-		return new OpenAPI().info(new Info().title("Your API").version("1.0.0"))
+		return new OpenAPI().info(new Info().title("Api favorita Aiqfome").version("1.0.0"))
 				.components(new Components().addSecuritySchemes("bearerAuth", new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
 	}
 

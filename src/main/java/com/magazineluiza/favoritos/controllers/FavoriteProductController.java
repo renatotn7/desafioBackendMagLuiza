@@ -24,7 +24,7 @@ import com.magazineluiza.favoritos.services.FavoriteProductService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/favorites")
+@RequestMapping("/api/v1/favorites")
 public class FavoriteProductController {
 
 	@Autowired
