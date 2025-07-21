@@ -48,6 +48,7 @@ public class Client {
 
 	private String city;
 
+	@Column(name = "uf")
 	private String state;
 
 	@Column(name = "zip_code")

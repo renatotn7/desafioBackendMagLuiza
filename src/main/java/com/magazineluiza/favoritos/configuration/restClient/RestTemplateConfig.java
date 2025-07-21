@@ -1,4 +1,4 @@
-package com.magazineluiza.favoritos.infra.restClient;
+package com.magazineluiza.favoritos.configuration.restClient;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

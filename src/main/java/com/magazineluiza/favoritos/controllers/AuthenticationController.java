@@ -12,7 +12,7 @@ import com.magazineluiza.favoritos.domain.user.AuthenticationDTO;
 import com.magazineluiza.favoritos.domain.user.LoginResponseDTO;
 import com.magazineluiza.favoritos.domain.user.RegisterDTO;
 import com.magazineluiza.favoritos.exception.DuplicateLoginException; // Importe a nova exceção
-import com.magazineluiza.favoritos.services.AuthorizationService;
+import com.magazineluiza.favoritos.services.AuthenticationService;
 
 import jakarta.validation.Valid;
 
@@ -21,7 +21,7 @@ import jakarta.validation.Valid;
 public class AuthenticationController {
 
 	@Autowired
-	private AuthorizationService authenticationService; // Injetando o novo serviço
+	private AuthenticationService authenticationService;
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
