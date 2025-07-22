@@ -46,6 +46,20 @@
     -   [4 Gerenciamento de Clientes](#user-content-4-gerenciamento-de-clientes)
         
     -   [5 Gerenciamento de Produtos Favoritos](#user-content-5-gerenciamento-de-produtos-favoritos)
+
+-   [Escolhas Tecnológicas no Projeto Desafio Backend Magaluiza](#user-content-escolhas-tecnológicas-no-projeto-desafio-backend-magaluiza)
+    
+    -   [1\. Base do Projeto: Spring Boot e Java 21](#user-content-1-base-do-projeto-spring-boot-e-java-21)
+        
+    -   [2\. Dependências Essenciais (Starters do Spring Boot)](#user-content-2-dependências-essenciais-starters-do-spring-boot)
+        
+    -   [3\. Banco de Dados: PostgreSQL e Flyway](#user-content-3-banco-de-dados-postgresql-e-flyway)
+        
+    -   [4\. Ferramentas de Desenvolvimento e Teste](#user-content-4-ferramentas-de-desenvolvimento-e-teste)
+        
+    -   [5\. Segurança e Documentação da API](#user-content-5-segurança-e-documentação-da-api)
+        
+    -   [6\. Estratégia de Build com Maven e Docker](#user-content-6-estratégia-de-build-com-maven-e-docker)
         
 
 # Guia de Configuração e Execução do Desafio Backend Magaluiza
@@ -580,6 +594,92 @@ Estes endpoints permitem que os usuários gerenciem sua lista de produtos favori
     -   `DELETE /api/v1/favorites/{favoriteId}`
         
         -   Remove um produto da lista de favoritos, utilizando o ID do registro de favorito (não o ID do produto).
-            
+          
 
 ---
+## Escolhas Tecnológicas no Projeto Desafio Backend Magaluiza
+
+Este documento detalha as principais escolhas tecnológicas e dependências configuradas no arquivo `pom.xml` do projeto "Desafio Backend Magazine Luiza", explicando o racional por trás de cada uma, com foco no uso do Java 21 e na compatibilidade com Docker.
+
+---
+
+### 1\. Base do Projeto: Spring Boot e Java 21
+
+O coração do projeto é o **Spring Boot**, utilizando a versão `3.5.3` do `spring-boot-starter-parent`. Essa escolha é fundamental por diversos motivos:
+
+-   **Produtividade:** Spring Boot oferece uma experiência de desenvolvimento rápida e simplificada com auto-configuração, starters e um servidor embarcado (Tomcat por padrão), eliminando a necessidade de configurações complexas.
+    
+-   **Conveniência:** Facilita a criação de aplicações _stand-alone_ (autônomas) que podem ser executadas como JARs.
+    
+-   **Ecossistema Amplo:** Permite integrar facilmente outras bibliotecas e frameworks do ecossistema Spring.
+    
+
+A escolha do **Java 21** (`<java.version>21</java.version>`) como a versão do JDK é estratégica:
+
+-   **Versão LTS (Long-Term Support):** Java 21 é uma versão de suporte de longo prazo, garantindo atualizações e suporte por um período estendido, o que é ideal para projetos em produção.
+    
+-   **Compatibilidade com Spring Boot 3.x:** As versões 3.x do Spring Boot exigem Java 17 ou superior. O Java 21 oferece os recursos mais recentes e otimizações de performance disponíveis na plataforma Java, permitindo que o projeto aproveite ao máximo as inovações da linguagem.
+    
+-   **Containerização Eficiente:** O Java 21, especialmente quando usado com imagens base como `eclipse-temurin:21-jre-alpine` no Docker, é otimizado para ambientes de contêineres, resultando em imagens mais leves e inicialização mais rápida da aplicação.
+    
+
+---
+
+### 2\. Dependências Essenciais (Starters do Spring Boot)
+
+O `pom.xml` faz uso extensivo dos "Starters" do Spring Boot, que são conjuntos de dependências pré-configuradas para funcionalidades comuns.
+
+-   **`spring-boot-starter-data-jpa`**: Habilita a persistência de dados utilizando JPA (Java Persistence API) com Hibernate como implementação padrão. Isso permite interagir com bancos de dados relacionais de forma orientada a objetos, minimizando o código boilerplate.
+    
+-   **`spring-boot-starter-validation`**: Adiciona suporte à validação de dados usando a Bean Validation API (JSR 380). Isso é crucial para garantir que os dados recebidos via API REST estejam em um formato e conteúdo válidos, melhorando a robustez da aplicação.
+    
+-   **`spring-boot-starter-security`**: Integra o Spring Security, fornecendo um robusto framework para autenticação e autorização. Essencial para proteger os endpoints da API, gerenciando acesso baseado em roles (ADMIN/USER) e implementando a lógica de login/registro.
+    
+-   **`spring-boot-starter-web`**: Inclui todas as dependências necessárias para construir aplicações web e APIs RESTful, como Spring MVC e o servidor Tomcat embarcado. É a base para expor os endpoints da sua aplicação.
+    
+
+---
+
+### 3\. Banco de Dados: PostgreSQL e Flyway
+
+-   **`org.postgresql:postgresql`**: O driver JDBC para PostgreSQL. Esta dependência é marcada com `<scope>runtime</scope>`, o que significa que ela só é necessária em tempo de execução, não durante a compilação. Isso é ideal para ambientes onde o banco de dados é externo à aplicação principal, como em um contêiner Docker separado.
+    
+-   **`org.flywaydb:flyway-database-postgresql`**: Integra o Flyway, uma ferramenta de _database migration_. O Flyway é essencial para gerenciar o esquema do banco de dados de forma versionada e controlada. Ele garante que as alterações no schema (criação de tabelas, modificação de colunas) sejam aplicadas de forma consistente em diferentes ambientes (desenvolvimento, teste, produção), o que é particularmente útil em um cenário de contêineres onde o banco de dados pode ser recriado ou atualizado.
+    
+
+---
+
+### 4\. Ferramentas de Desenvolvimento e Teste
+
+    
+-   **`spring-boot-devtools`**: Uma dependência de desenvolvimento que oferece recursos como reinício rápido da aplicação e LiveReload. Embora seja útil em desenvolvimento local, ela é marcada como `<optional>true</optional>` e `<scope>runtime</scope>`, o que significa que não será empacotada no JAR final que vai para o Docker, mantendo a imagem do contêiner mais leve e segura.
+        
+-   **`org.projectlombok:lombok`**: Uma biblioteca popular que reduz o código boilerplate gerando automaticamente getters, setters, construtores, métodos `equals`, `hashCode` e `toString`, além de outras funcionalidades como `@Slf4j` para logs. Melhora a legibilidade e concisão do código. A exclusão de Lombok na configuração do `spring-boot-maven-plugin` é uma boa prática para evitar conflitos potenciais ou dependências desnecessárias no JAR final, pois o próprio Maven Plugin pode reprocessar classes anotadas com Lombok.
+    
+
+---
+
+### 5\. Segurança e Documentação da API
+
+-   **`com.auth0:java-jwt`**: Biblioteca para a geração e validação de JWTs. É fundamental para a segurança da API, permitindo a autenticação de usuários e a proteção de rotas. A escolha do JWT para autenticação é alinhada com as melhores práticas para APIs RESTful sem estado, o que se adapta muito bem a ambientes conteinerizados.
+    
+-   **`org.springdoc:springdoc-openapi-starter-webmvc-ui`**: Habilita a geração automática de documentação da API no formato OpenAPI (Swagger). Isso permite que você acesse uma UI interativa (`/swagger-ui/index.html`) para testar e entender os endpoints da sua API, facilitando a integração com outros desenvolvedores e sistemas.
+    
+
+---
+
+### 6\. Estratégia de Build com Maven e Docker
+
+
+-   **`spring-boot-maven-plugin`**: Este plugin é responsável por empacotar a aplicação Spring Boot em um JAR executável. Ele cria um JAR "fat" ou "uber-JAR", que inclui todas as dependências da aplicação.
+    
+-   **Exclusão de Lombok na Configuração do Plugin:** A configuração `<excludes>` para `lombok` dentro do plugin é uma prática recomendada. Embora Lombok seja útil em tempo de compilação para gerar código, ele não precisa estar no JAR final em tempo de execução, pois o código já foi gerado. Isso ajuda a manter o tamanho do JAR otimizado e evita possíveis problemas de classpath em ambientes de produção.
+    
+
+A arquitetura do projeto, com um JAR autônomo e o uso de `Dockerfile` para conteinerização, reflete uma abordagem moderna de desenvolvimento:
+
+-   **Portabilidade com Docker:** O JAR final pode ser facilmente empacotado em uma imagem Docker (como visto em `Dockerfile`), que inclui um JRE mínimo (Java 21 JRE Alpine) e o JAR da aplicação. Isso garante que a aplicação execute de forma consistente em qualquer ambiente que suporte Docker, eliminando problemas de "funciona na minha máquina".
+    
+-   **Isolamento:** Docker oferece isolamento para a aplicação e suas dependências, incluindo o banco de dados PostgreSQL (via Docker Compose), o que simplifica o setup e o deploy.
+    
+-   **Desenvolvimento e Produção Similares:** O uso de Docker Compose para orquestrar a aplicação e o banco de dados em desenvolvimento espelha de perto como a aplicação será implantada em produção, reduzindo surpresas.
