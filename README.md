@@ -536,7 +536,7 @@ Estes endpoints permitem a consulta de produtos, que são obtidos de uma API ext
 
 Estes endpoints permitem operações CRUD (Criação, Leitura, Atualização e Exclusão) sobre os clientes.
 
--   **Acesso:** Restrito apenas a usuários com a role **`ADMIN`**.
+-   **Acesso:** Restrito apenas a usuários com a role **`USER`**.
     
 -   **Criar um Cliente:**
     
@@ -575,7 +575,7 @@ Estes endpoints permitem operações CRUD (Criação, Leitura, Atualização e E
 
 Estes endpoints permitem que os usuários gerenciem sua lista de produtos favoritos.
 
--   **Acesso:** Restrito apenas a usuários com a role **`ADMIN`**.
+-   **Acesso:** Restrito apenas a usuários com a role **`USER`**.
     
 -   **Adicionar um Produto Favorito:**
     
