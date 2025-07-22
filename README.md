@@ -172,9 +172,9 @@ O Java 21 é a versão LTS (Long-Term Support) recomendada para o Spring Boot 3.
 
 #### Windows:
 
-1.  **Baixar o Binário:** Acesse o site do [Apache Maven](https://maven.apache.org/download.cgi) e baixe o arquivo `apache-maven-3.9.3-bin.zip`.
+1.  **Baixar o Binário:** Acesse o site do [Apache Maven](https://maven.apache.org/download.cgi) e baixe o arquivo `apache-maven-3.9.11-bin.zip`.
     
-2.  **Extrair:** Descompacte o arquivo ZIP em um diretório de sua escolha (ex: `C:\Program Files\Apache\apache-maven-3.9.3`).
+2.  **Extrair:** Descompacte o arquivo ZIP em um diretório de sua escolha (ex: `C:\Program Files\Apache\apache-maven-3.9.11`).
     
 3.  **Configurar Variáveis de Ambiente:**
     
@@ -186,7 +186,7 @@ O Java 21 é a versão LTS (Long-Term Support) recomendada para o Spring Boot 3.
             
         -   Em "Nome da variável", digite `M2_HOME`.
             
-        -   Em "Valor da variável", digite o caminho da sua instalação do Maven (ex: `C:\Program Files\Apache\apache-maven-3.9.3`). Clique "OK".
+        -   Em "Valor da variável", digite o caminho da sua instalação do Maven (ex: `C:\Program Files\Apache\apache-maven-3.9.11`). Clique "OK".
             
         -   Encontre a variável `Path` (ou `PATH`), selecione-a e clique em **"Editar..."**.
             
@@ -210,9 +210,9 @@ O Java 21 é a versão LTS (Long-Term Support) recomendada para o Spring Boot 3.
     Bash
     
     ```
-    wget https://archive.apache.org/dist/maven/maven-3/3.9.3/binaries/apache-maven-3.9.3-bin.tar.gz
-    sudo tar -xvzf apache-maven-3.9.3-bin.tar.gz -C /opt/
-    sudo mv /opt/apache-maven-3.9.3 /opt/maven
+    wget https://archive.apache.org/dist/maven/maven-3/3.9.3/binaries/apache-maven-3.9.11-bin.tar.gz
+    sudo tar -xvzf apache-maven-3.9.11-bin.tar.gz -C /opt/
+    sudo mv /opt/apache-maven-3.9.11 /opt/maven
     ```
     
 2.  **Configurar Variáveis de Ambiente:**
@@ -250,7 +250,7 @@ O Java 21 é a versão LTS (Long-Term Support) recomendada para o Spring Boot 3.
     mvn -v
     ```
     
-    Você deve ver a versão do Maven 3.9.3.
+    Você deve ver a versão do Maven 3.9.11.
     
 
 ---
@@ -392,7 +392,7 @@ O Docker Compose é ideal para subir a aplicação Spring Boot e o banco de dado
 
 ## 4\. Acessar o PostgreSQL no Contêiner
 
-Para acessar o banco de dados PostgreSQL que está rodando dentro do seu contêiner, você usará a porta que você mapeou no `docker-compose.yml`.
+Para acessar o banco de dados PostgreSQL que está rodando dentro do seu contêiner, você usará a porta que você foi mapeada no `docker-compose.yml`.
 
 Seu `docker-compose.yml` tem:
 
@@ -455,7 +455,7 @@ A API utiliza JWT (JSON Web Token) para autenticação.
 
 #### 2.1. Registro de Usuários
 
-Crie novos usuários com diferentes níveis de acesso.
+Crie novos usuários com diferentes níveis de acesso obrigatório pois na aplicacao não há usuários quando inicia.
 
 -   **Endpoint:** `POST /auth/v1/register`
     
@@ -614,7 +614,7 @@ O coração do projeto é o **Spring Boot**, utilizando a versão `3.5.3` do `sp
 -   **Ecossistema Amplo:** Permite integrar facilmente outras bibliotecas e frameworks do ecossistema Spring.
     
 
-A escolha do **Java 21** (`<java.version>21</java.version>`) como a versão do JDK é estratégica:
+A escolha do **Java 21** como a versão do JDK é estratégica:
 
 -   **Versão LTS (Long-Term Support):** Java 21 é uma versão de suporte de longo prazo, garantindo atualizações e suporte por um período estendido, o que é ideal para projetos em produção.
     
@@ -642,7 +642,7 @@ O `pom.xml` faz uso extensivo dos "Starters" do Spring Boot, que são conjuntos 
 
 ### 3\. Banco de Dados: PostgreSQL e Flyway
 
--   **`org.postgresql:postgresql`**: O driver JDBC para PostgreSQL. Esta dependência é marcada com `<scope>runtime</scope>`, o que significa que ela só é necessária em tempo de execução, não durante a compilação. Isso é ideal para ambientes onde o banco de dados é externo à aplicação principal, como em um contêiner Docker separado.
+-   **`org.postgresql:postgresql`**: O driver JDBC para PostgreSQL. Esta dependência é marcada com `<scope>runtime</scope> no pom da aplicacão`, o que significa que ela só é necessária em tempo de execução, não durante a compilação. Isso é ideal para ambientes onde o banco de dados é externo à aplicação principal, como em um contêiner Docker separado.
     
 -   **`org.flywaydb:flyway-database-postgresql`**: Integra o Flyway, uma ferramenta de _database migration_. O Flyway é essencial para gerenciar o esquema do banco de dados de forma versionada e controlada. Ele garante que as alterações no schema (criação de tabelas, modificação de colunas) sejam aplicadas de forma consistente em diferentes ambientes (desenvolvimento, teste, produção), o que é particularmente útil em um cenário de contêineres onde o banco de dados pode ser recriado ou atualizado.
     
@@ -652,7 +652,7 @@ O `pom.xml` faz uso extensivo dos "Starters" do Spring Boot, que são conjuntos 
 ### 4\. Ferramentas de Desenvolvimento e Teste
 
     
--   **`spring-boot-devtools`**: Uma dependência de desenvolvimento que oferece recursos como reinício rápido da aplicação e LiveReload. Embora seja útil em desenvolvimento local, ela é marcada como `<optional>true</optional>` e `<scope>runtime</scope>`, o que significa que não será empacotada no JAR final que vai para o Docker, mantendo a imagem do contêiner mais leve e segura.
+-   **`spring-boot-devtools`**: Uma dependência de desenvolvimento que oferece recursos como reinício rápido da aplicação e LiveReload. Embora seja útil em desenvolvimento local, ela é marcada como `<optional>true</optional>` e `<scope>runtime</scope> no pom da aplicacão`, o que significa que não será empacotada no JAR final que vai para o Docker, mantendo a imagem do contêiner mais leve e segura.
         
 -   **`org.projectlombok:lombok`**: Uma biblioteca popular que reduz o código boilerplate gerando automaticamente getters, setters, construtores, métodos `equals`, `hashCode` e `toString`, além de outras funcionalidades como `@Slf4j` para logs. Melhora a legibilidade e concisão do código. A exclusão de Lombok na configuração do `spring-boot-maven-plugin` é uma boa prática para evitar conflitos potenciais ou dependências desnecessárias no JAR final, pois o próprio Maven Plugin pode reprocessar classes anotadas com Lombok.
     
@@ -673,7 +673,7 @@ O `pom.xml` faz uso extensivo dos "Starters" do Spring Boot, que são conjuntos 
 
 -   **`spring-boot-maven-plugin`**: Este plugin é responsável por empacotar a aplicação Spring Boot em um JAR executável. Ele cria um JAR "fat" ou "uber-JAR", que inclui todas as dependências da aplicação.
     
--   **Exclusão de Lombok na Configuração do Plugin:** A configuração `<excludes>` para `lombok` dentro do plugin é uma prática recomendada. Embora Lombok seja útil em tempo de compilação para gerar código, ele não precisa estar no JAR final em tempo de execução, pois o código já foi gerado. Isso ajuda a manter o tamanho do JAR otimizado e evita possíveis problemas de classpath em ambientes de produção.
+-   **Exclusão de Lombok na Configuração do Plugin:** A configuração `<excludes> no pom` para `lombok` dentro do plugin é uma prática recomendada. Embora Lombok seja útil em tempo de compilação para gerar código, ele não precisa estar no JAR final em tempo de execução, pois o código já foi gerado. Isso ajuda a manter o tamanho do JAR otimizado e evita possíveis problemas de classpath em ambientes de produção.
     
 
 A arquitetura do projeto, com um JAR autônomo e o uso de `Dockerfile` para conteinerização, reflete uma abordagem moderna de desenvolvimento:
