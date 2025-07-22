@@ -1,8 +1,8 @@
 FROM eclipse-temurin:21-jre-alpine
 
-WORKDIR ./
+WORKDIR /app
 
-COPY target/favoritos-0.0.1-SNAPSHOT.jar app.jar # Para Maven
+COPY target/favoritos-0.0.1-SNAPSHOT.jar app.jar
 
 # Expõe a porta que sua aplicação Spring Boot usa (padrão é 8080)
 EXPOSE 8080

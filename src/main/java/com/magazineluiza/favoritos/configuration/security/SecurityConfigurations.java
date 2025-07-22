@@ -30,9 +30,23 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/auth/v1/register").permitAll() //
 						.requestMatchers(HttpMethod.POST, "/auth/v1/login").permitAll() //
 
-						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll() //
-						.requestMatchers(HttpMethod.POST, "/api/v1/products").hasRole("ADMIN").anyRequest().authenticated()) //
-				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
+						.requestMatchers(HttpMethod.GET, "/api/v1/products").hasAnyRole("ADMIN", "USER") //
+						.requestMatchers(HttpMethod.GET, "/api/v1/products/{id}").hasAnyRole("ADMIN", "USER") //
+
+						// Gerenciamento de Clientes - Acesso apenas para ADMIN
+						.requestMatchers(HttpMethod.POST, "/api/v1/clients").hasRole("USER") //
+						.requestMatchers(HttpMethod.GET, "/api/v1/clients").hasRole("USER") // 
+						.requestMatchers(HttpMethod.GET, "/api/v1/clients/{id}").hasRole("USER") //
+						.requestMatchers(HttpMethod.PUT, "/api/v1/clients/{id}").hasRole("USER") //
+						.requestMatchers(HttpMethod.DELETE, "/api/v1/clients/{id}").hasRole("USER") //
+
+						// Gerenciamento de Produtos Favoritos - Acesso apenas para ADMIN
+						.requestMatchers(HttpMethod.POST, "/api/v1/favorites").hasRole("USER") //
+						.requestMatchers(HttpMethod.GET, "/api/v1/favorites/client/{clientId}").hasRole("USER") //
+						.requestMatchers(HttpMethod.DELETE, "/api/v1/favorites/{favoriteId}").hasRole("USER") //
+						.anyRequest().authenticated()) //
+				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) //
+				.build();
 	}
 
 	@Bean
