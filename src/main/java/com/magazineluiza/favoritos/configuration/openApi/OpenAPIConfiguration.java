@@ -23,4 +23,5 @@ public class OpenAPIConfiguration {
 	public OpenApiCustomizer customerGlobalHeaderOpenApiCustomizer() {
 		return openApi -> openApi.addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
 	}
+
 }

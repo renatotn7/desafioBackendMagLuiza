@@ -1,0 +1,609 @@
+openapi: 3.0.1
+info:
+  title: Api favorita Aiqfome
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+security:
+  - bearerAuth: []
+tags:
+  - name: Clientes
+    description: Gerenciamento de clientes na API de favoritos
+  - name: Produtos
+    description: Operações relacionadas a produtos (integração com Fake Store API)
+  - name: Produtos Favoritos
+    description: Gerenciamento de produtos favoritos de clientes
+paths:
+  /api/v1/clients/{id}:
+    get:
+      tags:
+        - Clientes
+      summary: Busca um cliente por ID
+      description: Retorna os detalhes de um cliente específico usando seu ID.
+      operationId: getClientById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Cliente encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+    put:
+      tags:
+        - Clientes
+      summary: Atualiza um cliente existente
+      description: Atualiza os dados de um cliente pelo seu ID. O e-mail, se alterado, deve ser único.
+      operationId: updateClient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      responses:
+        '200':
+          description: Cliente atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: 'Requisição inválida: Dados de atualização ausentes ou incorretos'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '409':
+          description: 'Conflito: E-mail já cadastrado para outro cliente'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+    delete:
+      tags:
+        - Clientes
+      summary: Exclui um cliente
+      description: Remove um cliente do sistema pelo seu ID.
+      operationId: deleteClient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Cliente excluído com sucesso (sem conteúdo na resposta)
+          content:
+            '*/*':
+              schema:
+                type: object
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  /auth/v1/register:
+    post:
+      summary: Registra um novo usuário
+      description: Permite que um novo usuário crie uma conta no sistema fornecendo um login e senha. O login deve ser único
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDTO'
+        required: true
+      responses:
+        '200':
+          description: Registro bem-sucedido
+          content:
+            application/json: {}
+        '400':
+          description: 'Requisição inválida: Dados de registro inválidos ou ausentes'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '409':
+          description: 'Conflito: Login já em uso'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  /auth/v1/login:
+    post:
+      summary: Autentica um usuário e retorna um token JWT
+      description: Permite que um usuário existente faça login fornecendo suas credenciais (username/email e senha). Em caso de sucesso, um token de acesso JWT é retornado para uso em requisições protegidas.
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationDTO'
+        required: true
+      responses:
+        '200':
+          description: Autenticação bem-sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '403':
+          description: Requisicao não permitida, usuario ou senha estao incorretos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  /api/v1/favorites:
+    post:
+      tags:
+        - Produtos Favoritos
+      summary: Adiciona um produto à lista de favoritos de um cliente
+      description: Permite adicionar um produto à lista de favoritos de um cliente específico. Verifica se o produto existe na Fake Store API e se já não está favoritado pelo cliente.
+      operationId: addFavorite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavoriteProductRequestDTO'
+        required: true
+      responses:
+        '201':
+          description: Produto adicionado aos favoritos com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteProductResponseDTO'
+        '400':
+          description: 'Requisição inválida: ID de produto inválido ou produto não encontrado na Fake Store API'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '409':
+          description: 'Conflito: Produto já favoritado pelo cliente'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  /api/v1/clients:
+    get:
+      tags:
+        - Clientes
+      summary: Lista todos os clientes
+      description: Retorna uma lista de todos os clientes cadastrados no sistema.
+      operationId: getAllClients
+      responses:
+        '200':
+          description: Lista de clientes retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientList'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails' 
+    post:
+      tags:
+        - Clientes
+      summary: Cria um novo cliente
+      description: Registra um novo cliente no sistema com um e-mail único.
+      operationId: createClient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      responses:
+        '201':
+          description: Cliente criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: 'Requisição inválida: Dados do cliente ausentes ou incorretos'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '409':
+          description: 'Conflito: E-mail já cadastrado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  /api/v1/products:
+    get:
+      tags:
+        - Produtos
+      summary: Lista todos os produtos
+      description: Retorna uma lista de todos os produtos disponíveis, obtidos de uma API externa (Fake Store API).
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: Lista de produtos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Erro interno ao buscar produtos na API externa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  /api/v1/products/{id}:
+    get:
+      tags:
+        - Produtos
+      summary: Busca um produto por ID
+      description: Retorna os detalhes de um produto específico, obtido de uma API externa (Fake Store API), usando seu ID.
+      operationId: getProductById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Produto encontrado e retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDTO'
+        '400':
+          description: 'Requisição inválida: ID de produto inválido'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Produto não encontrado na API externa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Erro interno ao buscar o produto na API externa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  /api/v1/favorites/client/{clientId}:
+    get:
+      tags:
+        - Produtos Favoritos
+      summary: Lista produtos favoritos de um cliente
+      description: Retorna todos os produtos que um cliente específico favoritou.
+      operationId: getFavoritesByClient
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de produtos favoritos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteList'
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  /api/v1/favorites/{favoriteId}:
+    delete:
+      tags:
+        - Produtos Favoritos
+      summary: Remove um produto da lista de favoritos
+      description: Remove um produto favorito de um cliente usando o ID do registro de favorito.
+      operationId: removeFavorite
+      parameters:
+        - name: favoriteId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Produto removido dos favoritos com sucesso (sem conteúdo na resposta)
+          content:
+            '*/*':
+              schema:
+                type: object
+        '403':
+          description: Falha de autenticacao
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Registro de favorito não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+components:
+  schemas:
+    ClientList:
+      type: array
+      items:
+          $ref: '#/components/schemas/Client' 
+    ProductList:
+      type: array
+      items:
+          $ref: '#/components/schemas/ProductDTO' 
+    FavoriteList:
+      type: array
+      items:
+          $ref: '#/components/schemas/FavoriteProductResponseDTO' 
+    ErrorDetails:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        message:
+          type: string
+        details:
+          type: string
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+        cellPhone:
+          type: string
+        streetAddress:
+          type: string
+        addressComplement:
+          type: string
+        neighborhood:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zipCode:
+          type: string
+        phone:
+          type: string
+    RegisterDTO:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - USER
+    AuthenticationDTO:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+    LoginResponseDTO:
+      type: object
+      properties:
+        token:
+          type: string
+    FavoriteProductRequestDTO:
+      required:
+        - clientId
+        - productId
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+        clientId:
+          type: string
+          format: uuid
+    FavoriteProductResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        titulo:
+          type: string
+        imagem:
+          type: string
+        preco:
+          type: number
+        review:
+          type: number
+        clientId:
+          type: string
+          format: uuid
+        productId:
+          type: integer
+          format: int64
+    ProductDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        price:
+          type: number
+          format: double
+        description:
+          type: string
+        category:
+          type: string
+        image:
+          type: string
+        rating:
+          $ref: '#/components/schemas/RatingDTO'
+    RatingDTO:
+      type: object
+      properties:
+        rate:
+          type: number
+          format: double
+        count:
+          type: integer
+          format: int64
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

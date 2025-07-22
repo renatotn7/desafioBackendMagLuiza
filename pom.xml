@@ -5,8 +5,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>3.2.5</version>
+		<relativePath/> 
 	</parent>
 	<groupId>com.magazineluiza</groupId>
 	<artifactId>favoritos</artifactId>
@@ -69,18 +69,28 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.flywaydb</groupId>
-		    <artifactId>flyway-database-postgresql</artifactId>
-		</dependency>
-		  <dependency>
+	    	<groupId>org.flywaydb</groupId>
+	    	<artifactId>flyway-database-postgresql</artifactId>
+	    	<version>11.7.2</version> </dependency>
+		
+		<dependency>
+    <groupId>org.flywaydb</groupId>
+    <artifactId>flyway-core</artifactId>
+    <version>11.7.2</version>
+     </dependency>
+     <dependency>
         <groupId>org.springdoc</groupId>
-	        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-	        <version>2.6.0</version> 
-    	</dependency>
+	    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+	    <version>2.6.0</version> 
+    </dependency>
     	<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.datatype</groupId>
+		    <artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.auth0</groupId>
