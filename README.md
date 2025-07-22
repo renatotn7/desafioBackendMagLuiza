@@ -441,11 +441,8 @@ Este documento detalha as funcionalidades da API "Desafio Backend Magazine Luiza
 ---
 
 ### 1\. Acesso à Documentação Interativa (Swagger UI)
-
-Com a aplicação em execução, você pode acessar a documentação interativa da API (Swagger UI) para explorar todos os endpoints e testá-los diretamente:
-
--   **URL:** `http://localhost:8080/swagger-ui/index.html`
-    
+Você pode acessar a documentação swagger da API para explorar todos os endpoints através desse documento swagger.json.
+Para realizar testes basta importar no Postman por exemplo ou uma outra ferramenta de consulta de apis que possa rodar local
 
 ---
 
