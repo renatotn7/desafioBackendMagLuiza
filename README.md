@@ -455,7 +455,7 @@ A API utiliza JWT (JSON Web Token) para autenticação.
 
 #### 2.1. Registro de Usuários
 
-Crie novos usuários com diferentes níveis de acesso obrigatório pois na aplicacao não há usuários quando inicia.
+Crie novos usuários com diferentes níveis de acesso. obrigatório pois na aplicacao não há usuários quando inicia. Crie dois, um ADM e um USER
 
 -   **Endpoint:** `POST /auth/v1/register`
     
