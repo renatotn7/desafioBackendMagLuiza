@@ -602,7 +602,7 @@ Este documento detalha as principais escolhas tecnológicas e dependências conf
 
 ### 1\. Base do Projeto: Spring Boot e Java 21
 
-O coração do projeto é o **Spring Boot**, utilizando a versão `3.5.3` do `spring-boot-starter-parent`. Essa escolha é fundamental por diversos motivos:
+O coração do projeto é o **Spring Boot**, utilizando a versão `3.2.5` do `spring-boot-starter-parent`. Essa escolha é fundamental por diversos motivos:
 
 -   **Produtividade:** Spring Boot oferece uma experiência de desenvolvimento rápida e simplificada com auto-configuração, starters e um servidor embarcado (Tomcat por padrão), eliminando a necessidade de configurações complexas.
     
