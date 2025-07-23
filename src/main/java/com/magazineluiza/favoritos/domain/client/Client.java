@@ -24,6 +24,12 @@ import jakarta.persistence.Table;
 @EqualsAndHashCode(of = "id")
 public class Client {
 
+	public Client(UUID id, String name, String email) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(columnDefinition = "UUID")

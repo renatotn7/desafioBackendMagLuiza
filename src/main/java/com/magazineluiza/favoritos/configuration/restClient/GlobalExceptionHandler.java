@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.magazineluiza.favoritos.domain.errors.ErrorDetails;
+import com.magazineluiza.favoritos.exception.DuplicateFavoriteException;
 import com.magazineluiza.favoritos.exception.DuplicateLoginException;
 import com.magazineluiza.favoritos.exception.ProductNotFoundInFakeStoreApi;
 import com.magazineluiza.favoritos.exception.ResourceNotFoundException;
@@ -51,10 +52,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
 	}
 
+	@ExceptionHandler(DuplicateFavoriteException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ResponseEntity<ErrorDetails> handleError(DuplicateFavoriteException ex, WebRequest request) {
+		String message = ex.getMessage();
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleAllUncaughtException(Exception exception, WebRequest request) {
-		// Lógica para tratar a exceção e construir a resposta JSON
-		// Por exemplo:
 		String message = exception.getMessage();
 		if (exception.getMessage() != null && exception.getMessage().contains("constraint")) {
 			message = "Data integrity error. Please check the data and try again.";
@@ -63,5 +70,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	// Adicione outros métodos @ExceptionHandler para tipos específicos de exceções, se necessário
 }

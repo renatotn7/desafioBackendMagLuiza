@@ -4,10 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data // Anotação Lombok para gerar getters, setters, toString, equals e hashCode
-@NoArgsConstructor // Construtor sem argumentos
-@AllArgsConstructor // Construtor com todos os argumentos
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDTO {
+
+	public ProductDTO(Long id, String title, Double price) {
+		this.id = id;
+		this.title = title;
+		this.price = price;
+	}
 
 	private Long id;
 

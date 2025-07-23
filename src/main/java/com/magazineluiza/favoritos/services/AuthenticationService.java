@@ -40,12 +40,12 @@ public class AuthenticationService {
 	@Transactional // Garante que a operação de registro seja atômica
 	public void register(RegisterDTO data) {
 		// Validação da duplicidade de login
-		if (this.userRepository.findByLogin(data.login()) != null) {
-			throw new DuplicateLoginException("Login '" + data.login() + "' is already in use.");
+		if (this.userRepository.findByLogin(data.getLogin()) != null) {
+			throw new DuplicateLoginException("Login '" + data.getLogin() + "' is already in use.");
 		}
 
-		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-		User newUser = new User(data.login(), encryptedPassword, data.role());
+		String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
+		User newUser = new User(data.getLogin(), encryptedPassword, data.getRole());
 
 		this.userRepository.save(newUser);
 	}
