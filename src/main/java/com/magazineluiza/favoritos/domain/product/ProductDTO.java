@@ -27,6 +27,6 @@ public class ProductDTO {
 
 	private String image;
 
-	private RatingDTO rating; // Mapeia o objeto aninhado 'rating'
+	private RatingDTO rating;
 
 }

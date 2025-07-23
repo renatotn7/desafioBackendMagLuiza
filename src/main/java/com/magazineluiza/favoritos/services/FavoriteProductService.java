@@ -1,6 +1,6 @@
 package com.magazineluiza.favoritos.services;
 
-import java.math.BigDecimal; // Ensure this import is present for BigDecimal
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

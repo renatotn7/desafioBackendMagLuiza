@@ -23,7 +23,7 @@ public class AuthenticationService {
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	private UserRepository userRepository; // Nome mais claro para o repositório de usuários
+	private UserRepository userRepository;
 
 	@Autowired
 	private TokenService tokenService;

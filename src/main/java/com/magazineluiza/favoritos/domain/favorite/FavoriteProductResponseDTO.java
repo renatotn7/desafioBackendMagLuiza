@@ -25,7 +25,6 @@ public class FavoriteProductResponseDTO {
 
 	private BigDecimal review;
 
-	// Campos restantes em inglês (UUIDs e timestamps)
 	private UUID clientId; // Client ID
 
 	private Long productId; // Product ID from FakeStoreAPI
