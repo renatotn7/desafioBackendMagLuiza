@@ -31,7 +31,7 @@
         
 -   [Guia da API](#user-content-guia-da-api)
     
-    -   [1 Acesso à Documentação Interativa (Swagger UI)](#user-content-1-acesso-à-documentação-interativa-swagger-ui)
+    -   [1 Acesso à Documentação Swagger](#user-content-1-acesso-à-documentação-interativa-swagger-ui)
         
     -   [2 Autenticação e Registro de Usuários](#user-content-2-autenticação-e-registro-de-usuários)
         
@@ -440,7 +440,7 @@ Este documento detalha as funcionalidades da API "Desafio Backend Magazine Luiza
 
 ---
 
-### 1\. Acesso à Documentação Interativa (Swagger UI)
+### 1\. Acesso à Documentação Swagger
 Você pode acessar a documentação swagger da API para explorar todos os endpoints através desse documento swagger.json.
 Para realizar testes basta importar no Postman por exemplo ou uma outra ferramenta de consulta de apis que possa rodar local
 O json se encontra aqui:  [swagger.json](swagger.json).
